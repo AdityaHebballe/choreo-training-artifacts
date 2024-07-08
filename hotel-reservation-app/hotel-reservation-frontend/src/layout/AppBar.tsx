@@ -8,24 +8,38 @@ import MenuItem from "@mui/material/MenuItem";
 import AppBar from "@mui/material/AppBar";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { Home } from "@mui/icons-material";
-import { Button, Icon } from "@mui/material";
-import { UserContext } from "../contexts/user";
 import Cookies from "js-cookie";
+import { useHistory } from "react-router-dom"; // Assuming you use React Router for navigation
+
+import { UserContext } from "../contexts/user";
 
 function UserMenu() {
+  const history = useHistory();
   const user = React.useContext(UserContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = () => {
+    // Perform logout actions here
+    sessionStorage.removeItem("userInfo");
+    const sessionHint = Cookies.get("session_hint");
+    // Example redirect on logout
+    history.push(`/auth/logout?session_hint=${sessionHint}`);
+  };
+
   if (user.id === "") {
     return null;
   }
+
   return (
     <Box sx={{ flexGrow: 0 }}>
       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -49,18 +63,8 @@ function UserMenu() {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        <MenuItem onClick={() => {
-          sessionStorage.removeItem("userInfo");
-          window.location.href = `/auth/logout?session_hint=${Cookies.get('session_hint')}`;
-        }}>
-          <Button style={{ textTransform: "none" }}>
-            <Typography textAlign="center">My Reservations</Typography>
-          </Button>
-        </MenuItem>
-        <MenuItem>
-          <Button style={{ textTransform: "none" }}>
-            <Typography textAlign="center">Logout</Typography>
-          </Button>
+        <MenuItem onClick={handleLogout}>
+          <Typography variant="inherit">Logout</Typography>
         </MenuItem>
       </Menu>
     </Box>
@@ -101,4 +105,5 @@ function Header() {
     </AppBar>
   );
 }
+
 export default Header;
