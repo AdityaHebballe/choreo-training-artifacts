@@ -25,6 +25,7 @@ export default function App() {
     mobileNumber: "",
   });
   const [isAuthLoading, setIsAuthLoading] = useState(false);
+
   function getMappedUser(userInfo: any): User {
     return {
       email: userInfo?.email || "",
@@ -33,6 +34,7 @@ export default function App() {
       mobileNumber: userInfo?.mobile_number || "",
     };
   }
+
   useEffect(() => {
     setIsAuthLoading(true);
     if (Cookies.get("userinfo")) {
@@ -59,6 +61,7 @@ export default function App() {
     }
     setIsAuthLoading(false);
   }, []);
+
   if (isAuthLoading) {
     return <div>User authenticating...</div>;
   }
@@ -80,23 +83,17 @@ export default function App() {
             <BrowserRouter>
               <Routes>
                 {/* rooms */}
-                <Route path="/" Component={LandingPage} />
-                <Route path="/rooms" Component={RoomListing} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/rooms" element={<RoomListing />} />
                 {/* reservations */}
-                <Route path="/reservations" Component={ReservationListing} />
+                <Route path="/reservations" element={<ReservationListing />} />
                 {/* new reservation */}
-                <Route
-                  path="/reservations/new"
-                  Component={ReservationAddingPage}
-                />
+                <Route path="/reservations/new" element={<ReservationAddingPage />} />
                 {/* update reservation */}
-                <Route
-                  path="/reservations/change"
-                  Component={ReservationUpdatingPage}
-                />
-                <Route path="/error" Component={ErrorPage} />
+                <Route path="/reservations/change" element={<ReservationUpdatingPage />} />
+                <Route path="/error" element={<ErrorPage />} />
                 {/* Otherwise, show not found page */}
-                <Route path="*" Component={NotFound} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
           </div>
